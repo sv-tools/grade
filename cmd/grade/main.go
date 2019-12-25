@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/influxdata/grade"
+	"github.com/sv-go-tools/grade"
 	client "github.com/influxdata/influxdb/client/v2"
 )
 

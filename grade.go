@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/influxdata/grade/internal/parse"
 	client "github.com/influxdata/influxdb/client/v2"
+	"github.com/sv-go-tools/grade/internal/parse"
 )
 
 // Config represents the settings to process benchmarks.
