@@ -7,8 +7,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/sv-go-tools/grade"
 	client "github.com/influxdata/influxdb/client/v2"
+
+	"github.com/sv-go-tools/grade"
 )
 
 var (

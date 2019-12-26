@@ -73,9 +73,9 @@ type Benchmark struct {
 // Look for group of dash followed by one or more numbers, anchored to end of string.
 var reProcsSuffix = regexp.MustCompile(`(?:-(\d+))$`)
 
-// ParseLine extracts either a Benchmark or a package name from a single line of testing.B
+// Line extracts either a Benchmark or a package name from a single line of testing.B
 // output. If err is nil, either package name will be an empty string or benchmark will be nil.
-func ParseLine(line string) (*Benchmark, string, error) {
+func Line(line string) (*Benchmark, string, error) {
 	fields := strings.Fields(line)
 
 	// Two required, positional fields: Name and iterations.
@@ -141,10 +141,10 @@ func (b *Benchmark) parseMeasurement(quant string, unit string) {
 	}
 }
 
-// ParseMultipleBenchmarks reads from the given io.Reader and
+// MultipleBenchmarks reads from the given io.Reader and
 // returns the set of benchmarks and the name of the package those benchmarks belong to.
 // Input is exhausted when (nil, "", nil) is returned
-func ParseMultipleBenchmarks(r io.Reader) (map[string][]*Benchmark, error) {
+func MultipleBenchmarks(r io.Reader) (map[string][]*Benchmark, error) {
 	res := make(map[string][]*Benchmark)
 
 	var bs []*Benchmark
@@ -153,7 +153,7 @@ func ParseMultipleBenchmarks(r io.Reader) (map[string][]*Benchmark, error) {
 	for scan.Scan() {
 		txt := scan.Text()
 
-		b, pkg, err := ParseLine(txt)
+		b, pkg, err := Line(txt)
 		if err != nil {
 			// That just means we couldn't parse this particular line.
 			continue
