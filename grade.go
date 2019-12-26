@@ -7,8 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/influxdata/grade/internal/parse"
 	client "github.com/influxdata/influxdb/client/v2"
+
+	"github.com/sv-go-tools/grade/internal/parse"
 )
 
 // Config represents the settings to process benchmarks.
@@ -77,7 +78,7 @@ func Points(r io.Reader, cfg Config) (client.BatchPoints, error) {
 		return nil, err
 	}
 
-	benchset, err := parse.ParseMultipleBenchmarks(r)
+	benchset, err := parse.MultipleBenchmarks(r)
 	if err != nil {
 		return nil, err
 	}

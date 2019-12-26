@@ -1,0 +1,39 @@
+name: Go
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    strategy:
+      matrix:
+        go: [1.13]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Check out code
+        uses: actions/checkout@v1
+      - name: Run Unit Tests
+        run: go test -race ./...
+  build:
+    name: build
+    strategy:
+      matrix:
+        go: [1.13]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Check out code
+        uses: actions/checkout@v1
+      - name: Build
+        run: go build -o grade cmd/grade/main.go

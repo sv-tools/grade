@@ -1,13 +1,20 @@
 # grade
+[![GolangCI](https://golangci.com/badges/github.com/sv-go-tools/grade.svg)](https://golangci.com/r/github.com/sv-go-tools/grade)
+[![License](https://img.shields.io/github/license/sv-go-tools/grade.svg)](/LICENSE)
+[![Release](https://img.shields.io/github/release/sv-go-tools/grade.svg)](https://github.com/sv-go-tools/grade.svg/releases/latest)
 
-grade ingests Go benchmark data into InfluxDB so that you can track performance over time.
+
+`grade` ingests Go benchmark data into InfluxDB so that you can track performance over time.
+
+This is a fork of the [influxdata/grade](https://github.com/influxdata/grade).
+
 
 ## Installation
 
 To download and install the `grade` executable into your `$GOPATH/bin`:
 
 ```sh
-go get github.com/influxdata/grade/cmd/grade
+go get github.com/sv-go-tools/grade/cmd/grade
 ```
 
 ## Usage
