@@ -35,6 +35,7 @@ type Config struct {
 	HardwareID string
 
 	// Branch is the tag value to use to indicate which branch of the repository was used for the benchmarks that have run.
+	// The tag is optional and can be omitted.
 	Branch string
 }
 
