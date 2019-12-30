@@ -8,32 +8,64 @@ on:
 jobs:
   unit-tests:
     name: Unit Tests
-    strategy:
-      matrix:
-        go: [1.13]
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: ${{ matrix.go }}
+          go-version: 1.13
       - name: Check out code
         uses: actions/checkout@v1
       - name: Run Unit Tests
         run: go test -race ./...
   build:
-    name: build
-    strategy:
-      matrix:
-        go: [1.13]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    runs-on: ${{ matrix.os }}
+    name: Test Benchmarks
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    env:
+      DATABASE: Grade
+      COLLECTION: Bench
     steps:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: ${{ matrix.go }}
+          go-version: 1.13
       - name: Check out code
         uses: actions/checkout@v1
+      - name: Run Benchmarks
+        run: |
+          go test -cpu 1,2 -run=XXX -bench=. -benchmem > bench.log
+          cat bench.log
       - name: Build
         run: go build -o grade cmd/grade/main.go
+      - name: Grade dry-run
+        run: >-
+          ./grade
+          -influxurl=""
+          -hardwareid="github/actions"
+          -goversion="$(go version | cut -d' ' -f3-)"
+          -revision="${{ github.sha }}"
+          -timestamp="$(git log -1 --format=%ct)"
+          -branch="${{ github.ref }}"
+          < bench.log
+      - name: Run influxdb
+        run: |
+          docker run --name=influxdb -d -p 8086:8086 influxdb:latest
+          sleep 5
+          docker exec influxdb influx -execute "CREATE DATABASE ${DATABASE} WITH DURATION INF SHARD DURATION 90d"
+      - name: Grade influxdb
+        run: >-
+          ./grade
+          -influxurl="http://localhost:8086"
+          -database="${DATABASE}"
+          -measurement="${COLLECTION}"
+          -hardwareid="github/actions"
+          -goversion="$(go version | cut -d' ' -f3-)"
+          -revision="${{ github.sha }}"
+          -timestamp="$(git log -1 --format=%ct)"
+          -branch="${{ github.ref }}"
+          < bench.log
+      - name: Check influxdb
+        run: docker exec influxdb influx -database ${DATABASE} -execute "SELECT * FROM ${COLLECTION}" | grep Fib
+      - name: Shutdown influxdb
+        run: docker stop influxdb
