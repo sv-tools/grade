@@ -37,33 +37,44 @@ jobs:
           go test -cpu 1,2 -run=XXX -bench=. -benchmem > bench.log
           cat bench.log
       - name: Build
-        run: go build -o grade cmd/grade/main.go
-      - name: Grade dry-run
+        run: go build -o grade grade.go
+      - name: Grade JSON
         run: >-
           ./grade
-          -influxurl=""
-          -hardwareid="github/actions"
-          -goversion="$(go version | cut -d' ' -f3-)"
-          -revision="${{ github.sha }}"
-          -timestamp="$(git log -1 --format=%ct)"
-          -branch="${{ github.ref }}"
+          --hardwareid="github/actions"
+          --goversion="$(go version | cut -d' ' -f3-)"
+          --revision="${{ github.sha }}"
+          --timestamp="$(git log -1 --format=%ct)"
+          --branch="${{ github.ref }}"
+          < bench.log
+      - name: Grade influx dry-run
+        run: >-
+          ./grade influx
+          --connection-url=""
+          --database="${DATABASE}"
+          --measurement="${COLLECTION}"
+          --hardwareid="github/actions"
+          --goversion="$(go version | cut -d' ' -f3-)"
+          --revision="${{ github.sha }}"
+          --timestamp="$(git log -1 --format=%ct)"
+          --branch="${{ github.ref }}"
           < bench.log
       - name: Run influxdb
         run: |
           docker run --name=influxdb -d -p 8086:8086 influxdb:latest
           sleep 5
           docker exec influxdb influx -execute "CREATE DATABASE ${DATABASE} WITH DURATION INF SHARD DURATION 90d"
-      - name: Grade influxdb
+      - name: Grade influx
         run: >-
-          ./grade
-          -influxurl="http://localhost:8086"
-          -database="${DATABASE}"
-          -measurement="${COLLECTION}"
-          -hardwareid="github/actions"
-          -goversion="$(go version | cut -d' ' -f3-)"
-          -revision="${{ github.sha }}"
-          -timestamp="$(git log -1 --format=%ct)"
-          -branch="${{ github.ref }}"
+          ./grade influx
+          --connection-url="http://localhost:8086"
+          --database="${DATABASE}"
+          --measurement="${COLLECTION}"
+          --hardwareid="github/actions"
+          --goversion="$(go version | cut -d' ' -f3-)"
+          --revision="${{ github.sha }}"
+          --timestamp="$(git log -1 --format=%ct)"
+          --branch="${{ github.ref }}"
           < bench.log
       - name: Check influxdb
         run: docker exec influxdb influx -database ${DATABASE} -execute "SELECT * FROM ${COLLECTION}" | grep Fib
