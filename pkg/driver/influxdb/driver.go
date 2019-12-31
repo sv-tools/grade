@@ -5,11 +5,10 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/sv-go-tools/grade/pkg/driver"
-
-	client "github.com/influxdata/influxdb/client/v2"
+	client "github.com/influxdata/influxdb1-client/v2"
 
 	"github.com/sv-go-tools/grade/internal/parse"
+	"github.com/sv-go-tools/grade/pkg/driver"
 )
 
 func Execute(cfg *driver.Config) error {
