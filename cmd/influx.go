@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/sv-go-tools/grade/pkg/driver"
 	"github.com/sv-go-tools/grade/pkg/driver/influxdb"
 
 	"github.com/spf13/cobra"
@@ -17,7 +16,8 @@ var influxCmd = &cobra.Command{
 }
 
 func init() {
-	driver.AddFlags(influxCmd, &cfg, "measurement")
+	AddCommonFlags(influxCmd, &cfg)
+	AddDBFlags(influxCmd, &cfg, "measurement")
 
 	RootCmd.AddCommand(influxCmd)
 }

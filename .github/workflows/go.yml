@@ -78,7 +78,7 @@ jobs:
             return commit_details.data.author.date
       - name: Grade JSON
         run: >-
-          ./bin/grade
+          ./bin/grade json
           --hardwareid="github/actions"
           --goversion="$(go version | cut -d' ' -f3-)"
           --revision="${{ github.sha }}"
