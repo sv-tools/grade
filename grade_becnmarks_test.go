@@ -1,4 +1,4 @@
-package grade
+package main
 
 import "testing"
 
