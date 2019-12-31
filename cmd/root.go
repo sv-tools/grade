@@ -3,6 +3,7 @@ package cmd
 import (
 	"errors"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/sv-go-tools/grade/internal/parse"
@@ -13,9 +14,9 @@ import (
 )
 
 var (
-	cfg      driver.Config
-	unixTime int64
-	version  string = "v0.0.0"
+	cfg     driver.Config
+	rawTime string
+	version string = "v0.0.0"
 )
 
 // RootCmd is a root command
@@ -40,7 +41,16 @@ Prints the data in JSON if no driver selected.`,
 		} else {
 			return errors.New("please pipe the output of go test into grade")
 		}
-		cfg.Timestamp = time.Unix(unixTime, 0)
+		seconds, err := strconv.Atoi(rawTime)
+		if err == nil {
+			cfg.Timestamp = time.Unix(int64(seconds), 0)
+		} else {
+			parsedTime, err := time.Parse(time.RFC3339, rawTime)
+			if err != nil {
+				return err
+			}
+			cfg.Timestamp = parsedTime
+		}
 		return nil
 	},
 	Version: version,
@@ -48,7 +58,7 @@ Prints the data in JSON if no driver selected.`,
 
 func init() {
 	RootCmd.PersistentFlags().StringVar(&cfg.GoVersion, "goversion", "", "Go version used to run benchmarks")
-	RootCmd.PersistentFlags().Int64Var(&unixTime, "timestamp", 0, "Unix epoch timestamp (in seconds) to apply when storing all benchmark results")
+	RootCmd.PersistentFlags().StringVar(&rawTime, "timestamp", "", "Unix epoch timestamp (in seconds) or RFC3339 to apply when storing all benchmark results")
 	RootCmd.PersistentFlags().StringVar(&cfg.Revision, "revision", "", "Revision of the repository used to generate benchmark results")
 	RootCmd.PersistentFlags().StringVar(&cfg.HardwareID, "hardwareid", "", "User-specified string to represent the hardware on which the benchmarks were run")
 	RootCmd.PersistentFlags().StringVar(&cfg.Branch, "branch", "", "Branch of the repository used to generate benchmark results. The flag is optional and can be omitted")

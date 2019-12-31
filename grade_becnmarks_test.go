@@ -21,10 +21,8 @@ func BenchmarkFib(b *testing.B) {
 
 func BenchmarkFibParallel(b *testing.B) {
 	b.RunParallel(func(pb *testing.PB) {
-		var r int
 		for pb.Next() {
-			r = fib(10)
+			_ = fib(10)
 		}
-		result = r
 	})
 }
