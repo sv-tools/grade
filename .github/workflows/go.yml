@@ -89,6 +89,12 @@ jobs:
     name: Grade InfluxDB
     needs: tests
     runs-on: ubuntu-latest
+    services:
+      influxdb:
+        image: influxdb:latest
+        ports:
+          - 8086:8086
+        options: "--name=influxdb"
     env:
       DATABASE: Grade
       COLLECTION: Benchmarks
@@ -122,24 +128,19 @@ jobs:
           --timestamp="${{ steps.commited-at.outputs.result }}"
           --branch="${{ github.ref }}"
           < log/test.log
-      - name: Run influxdb
-        run: |
-          docker run --name=influxdb -d -p 8086:8086 influxdb:latest
-          sleep 5
-          docker exec influxdb influx -execute "CREATE DATABASE ${DATABASE} WITH DURATION INF SHARD DURATION 90d"
+      - name: Create Database
+        run: docker exec influxdb influx -execute "CREATE DATABASE ${DATABASE} WITH DURATION INF SHARD DURATION 90d"
       - name: Grade influx
         run: >-
-          ./grade influx
+          ./bin/grade influx
           --connection-url="http://localhost:8086"
           --database="${DATABASE}"
           --measurement="${COLLECTION}"
           --hardwareid="github/actions"
           --goversion="$(go version | cut -d' ' -f3-)"
           --revision="${{ github.sha }}"
-          --timestamp="$(git log -1 --format=%ct)"
+          --timestamp=""${{ steps.commited-at.outputs.result }}""
           --branch="${{ github.ref }}"
-          < bench.log
+          < log/test.log
       - name: Check influxdb
         run: docker exec influxdb influx -database ${DATABASE} -execute "SELECT * FROM ${COLLECTION}" | grep Fib
-      - name: Shutdown influxdb
-        run: docker stop influxdb
