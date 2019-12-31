@@ -82,7 +82,7 @@ func Points(cfg *driver.Config) (client.BatchPoints, error) {
 			p, err := client.NewPoint(
 				cfg.Collection,
 				tags,
-				makeFields(b, cfg.Revision),
+				makeFields(b, cfg),
 				cfg.Timestamp,
 			)
 			if err != nil {
@@ -96,10 +96,10 @@ func Points(cfg *driver.Config) (client.BatchPoints, error) {
 	return bp, nil
 }
 
-func makeFields(b *parse.Benchmark, revision string) map[string]interface{} {
+func makeFields(b *parse.Benchmark, cfg *driver.Config) map[string]interface{} {
 	f := make(map[string]interface{}, 6)
 
-	f["revision"] = revision
+	f["revision"] = cfg.Revision
 	f["n"] = b.N
 
 	if (b.Measured & parse.NsPerOp) != 0 {
