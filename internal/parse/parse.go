@@ -58,15 +58,23 @@ const (
 )
 
 // Benchmark is one run of a single benchmark.
+// Name is benchmark name, stripped of Benchmark prefix and Procs suffix.
+// Procs is number of procs used to run benchmark
+// N is number of iterations
+// NsPerOp is nanoseconds per iteration
+// AllocedBytesPerOp is bytes allocated per iteration
+// AllocsPerOp is allocs per iteration
+// MBPerS is MB processed per second
+// Measured is which measurements were recorded
 type Benchmark struct {
-	Name              string  // benchmark name, stripped of Benchmark prefix and Procs suffix.
-	Procs             int     // number of procs used to run benchmark
-	N                 int     // number of iterations
-	NsPerOp           float64 // nanoseconds per iteration
-	AllocedBytesPerOp uint64  // bytes allocated per iteration
-	AllocsPerOp       uint64  // allocs per iteration
-	MBPerS            float64 // MB processed per second
-	Measured          int     // which measurements were recorded
+	Name              string  `json:"name" bson:"name"`
+	Procs             int     `json:"procs" bson:"procs"`
+	N                 int     `json:"n" bson:"n"`
+	NsPerOp           float64 `json:"nsPerOp" bson:"nsPerOp"`
+	AllocedBytesPerOp uint64  `json:"allocedBytesPerOp" bson:"allocedBytesPerOp"`
+	AllocsPerOp       uint64  `json:"allocsPerOp" bson:"allocsPerOp"`
+	MBPerS            float64 `json:"mbPerS" bson:"mbPerS"`
+	Measured          int     `json:"measured" bson:"measured"`
 }
 
 // Name looks like BenchmarkFoo or BenchmarkBar-123.

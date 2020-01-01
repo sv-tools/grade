@@ -76,15 +76,27 @@ jobs:
           script: |
             const commit_details = await github.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
             return commit_details.data.author.date
+      - name: Make logs dir
+        run: mkdir logs
       - name: Grade JSON
         run: >-
           ./bin/grade json
           --hardwareid="github/actions"
           --goversion="$(go version | cut -d' ' -f3-)"
           --revision="${{ github.sha }}"
-          --timestamp="${{ steps.commited-at.outputs.result }}"
+          --timestamp=${{ steps.commited-at.outputs.result }}
           --branch="${{ github.ref }}"
           < log/test.log
+          2>&1
+          | tee -a logs/json.log
+          | grep "github.com/sv-go-tools/grade"
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: json
+          path: logs
+
   influx:
     name: Grade InfluxDB
     needs: tests
@@ -96,8 +108,8 @@ jobs:
           - 8086:8086
         options: "--name=influxdb"
     env:
-      DATABASE: Grade
-      COLLECTION: Benchmarks
+      DATABASE: Benchmarks
+      COLLECTION: Grade
     steps:
       - name: Download grade
         uses: actions/download-artifact@v1
@@ -116,21 +128,24 @@ jobs:
           script: |
             const commit_details = await github.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
             return commit_details.data.author.date
-      - name: Grade influx dry-run
+      - name: Make logs dir
+        run: mkdir logs
+      - name: Grade dry-run
         run: >-
           ./bin/grade influx
           --connection-url=""
-          --database="${DATABASE}"
-          --measurement="${COLLECTION}"
           --hardwareid="github/actions"
           --goversion="$(go version | cut -d' ' -f3-)"
           --revision="${{ github.sha }}"
-          --timestamp="${{ steps.commited-at.outputs.result }}"
+          --timestamp=${{ steps.commited-at.outputs.result }}
           --branch="${{ github.ref }}"
           < log/test.log
+          2>&1
+          | tee -a logs/dry-run.log
+          | grep "github.com/sv-go-tools/grade"
       - name: Create Database
         run: docker exec influxdb influx -execute "CREATE DATABASE ${DATABASE} WITH DURATION INF SHARD DURATION 90d"
-      - name: Grade influx
+      - name: Grade
         run: >-
           ./bin/grade influx
           --connection-url="http://localhost:8086"
@@ -139,8 +154,106 @@ jobs:
           --hardwareid="github/actions"
           --goversion="$(go version | cut -d' ' -f3-)"
           --revision="${{ github.sha }}"
-          --timestamp=""${{ steps.commited-at.outputs.result }}""
+          --timestamp=${{ steps.commited-at.outputs.result }}
           --branch="${{ github.ref }}"
           < log/test.log
-      - name: Check influxdb
-        run: docker exec influxdb influx -database ${DATABASE} -execute "SELECT * FROM ${COLLECTION}" | grep Fib
+          2>&1
+          | tee -a logs/influx.log
+      - name: Check DB
+        run: >-
+          docker exec influxdb influx -database ${DATABASE} -execute "SELECT * FROM ${COLLECTION}"
+          2>&1
+          | tee -a logs/db.log
+          | grep "github.com/sv-go-tools/grade"
+      - name: Docker logs
+        if: failure()
+        run: |
+          docker ps 2>&1 > logs/ps.log
+          docker logs influxdb 2>&1 > logs/container.log
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: influx
+          path: logs
+
+  mongo:
+    name: Grade MongoDB
+    needs: tests
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: "--name=mongodb"
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: secret
+    env:
+      DATABASE: Benchmarks
+      COLLECTION: Grade
+    steps:
+      - name: Download grade
+        uses: actions/download-artifact@v1
+        with:
+          name: bin
+      - name: Make executable
+        run: chmod +x bin/grade
+      - name: Download log
+        uses: actions/download-artifact@v1
+        with:
+          name: log
+      - uses: actions/github-script@0.3.0
+        id: commited-at
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const commit_details = await github.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
+            return commit_details.data.author.date
+      - name: Make logs dir
+        run: mkdir logs
+      - name: Grade dry-run
+        run: >-
+          ./bin/grade mongo
+          --connection-url=""
+          --hardwareid="github/actions"
+          --goversion="$(go version | cut -d' ' -f3-)"
+          --revision="${{ github.sha }}"
+          --timestamp=${{ steps.commited-at.outputs.result }}
+          --branch="${{ github.ref }}"
+          < log/test.log
+          2>&1
+          | tee -a logs/dry-run.log
+          | grep "github.com/sv-go-tools/grade"
+      - name: Grade
+        run: >-
+          ./bin/grade mongo
+          --connection-url="mongodb://admin:secret@localhost:27017"
+          --database="${DATABASE}"
+          --collection="${COLLECTION}"
+          --hardwareid="github/actions"
+          --goversion="$(go version | cut -d' ' -f3-)"
+          --revision="${{ github.sha }}"
+          --timestamp=${{ steps.commited-at.outputs.result }}
+          --branch="${{ github.ref }}"
+          < log/test.log
+          2>&1
+          | tee -a logs/mongo.log
+      - name: Check DB
+        run: >-
+          docker exec mongodb mongo -u admin -p secret --authenticationDatabase=admin ${DATABASE} --eval="printjson(db.${COLELCTION}.findOne())"
+          2>&1
+          | tee -a logs/db.log
+          | grep "github.com/sv-go-tools/grade"
+      - name: Docker logs
+        if: failure()
+        run: |
+          docker ps 2>&1 > logs/ps.log
+          docker logs mongodb 2>&1 > logs/container.log
+      - name: Upload log
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: mongo
+          path: logs

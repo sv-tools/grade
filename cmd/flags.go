@@ -22,11 +22,9 @@ func AddCommonFlags(cmd *cobra.Command, cfg *driver.Config) {
 
 // AddDBFlags adds the DB related flags for a command
 func AddDBFlags(cmd *cobra.Command, cfg *driver.Config, collectionName string) {
-	cmd.PersistentFlags().BoolVarP(&cfg.Insecure, "insecure", "i", false, "Skip SSL verification if set")
 	cmd.PersistentFlags().StringVar(&cfg.ConnectionURL, "connection-url", "", "Connection URL of Database instance to store benchmark results (set to empty string to print to stdout)")
 	cmd.PersistentFlags().StringVar(&cfg.Database, "database", "benchmarks", "Name of database to store benchmark results")
-	cmd.PersistentFlags().StringVar(&cfg.Collection, collectionName, "", "Name of "+collectionName+" to store benchmark results")
+	cmd.PersistentFlags().StringVar(&cfg.Collection, collectionName, "go", "Name of "+collectionName+" to store benchmark results")
 
 	_ = cmd.MarkPersistentFlagRequired("connection-url")
-	_ = cmd.MarkPersistentFlagRequired(collectionName)
 }
