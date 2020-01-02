@@ -66,52 +66,50 @@ func Points(cfg *driver.Config) (client.BatchPoints, error) {
 		return nil, err
 	}
 
-	for pkg, bs := range cfg.Benchmarks {
-		for _, b := range bs {
-			tags := map[string]string{
-				"goversion": cfg.GoVersion,
-				"hwid":      cfg.HardwareID,
-				"pkg":       pkg,
-				"procs":     strconv.Itoa(b.Procs),
-				"name":      b.Name,
-			}
-			if cfg.Branch != "" {
-				tags["branch"] = cfg.Branch
-			}
-			p, err := client.NewPoint(
-				cfg.Collection,
-				tags,
-				makeFields(b, cfg),
-				cfg.Timestamp,
-			)
-			if err != nil {
-				return nil, err
-			}
-
-			bp.AddPoint(p)
+	for _, rec := range cfg.Records {
+		tags := map[string]string{
+			"goversion": rec.GoVersion,
+			"hwid":      rec.HardwareID,
+			"pkg":       rec.Package,
+			"procs":     strconv.Itoa(rec.Procs),
+			"name":      rec.Name,
 		}
+		if cfg.Branch != "" {
+			tags["branch"] = rec.Branch
+		}
+		p, err := client.NewPoint(
+			cfg.Collection,
+			tags,
+			makeFields(rec),
+			cfg.Timestamp,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		bp.AddPoint(p)
 	}
 
 	return bp, nil
 }
 
-func makeFields(b *parse.Benchmark, cfg *driver.Config) map[string]interface{} {
+func makeFields(rec *driver.Record) map[string]interface{} {
 	f := make(map[string]interface{}, 6)
 
-	f["revision"] = cfg.Revision
-	f["n"] = b.N
+	f["revision"] = rec.Revision
+	f["n"] = rec.N
 
-	if (b.Measured & parse.NsPerOp) != 0 {
-		f["ns_per_op"] = b.NsPerOp
+	if (rec.Measured & parse.NsPerOp) != 0 {
+		f["ns_per_op"] = rec.NsPerOp
 	}
-	if (b.Measured & parse.MBPerS) != 0 {
-		f["mb_per_s"] = b.MBPerS
+	if (rec.Measured & parse.MBPerS) != 0 {
+		f["mb_per_s"] = rec.MBPerS
 	}
-	if (b.Measured & parse.AllocedBytesPerOp) != 0 {
-		f["alloced_bytes_per_op"] = int64(b.AllocedBytesPerOp)
+	if (rec.Measured & parse.AllocedBytesPerOp) != 0 {
+		f["alloced_bytes_per_op"] = int64(rec.AllocedBytesPerOp)
 	}
-	if (b.Measured & parse.AllocsPerOp) != 0 {
-		f["allocs_per_op"] = int64(b.AllocsPerOp)
+	if (rec.Measured & parse.AllocsPerOp) != 0 {
+		f["allocs_per_op"] = int64(rec.AllocsPerOp)
 	}
 
 	return f

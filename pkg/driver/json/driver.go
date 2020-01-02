@@ -8,7 +8,7 @@ import (
 )
 
 func Execute(cfg *driver.Config) error {
-	data, err := json.MarshalIndent(cfg, "", "  ")
+	data, err := json.MarshalIndent(cfg.Records, "", "  ")
 	if err != nil {
 		return err
 	}

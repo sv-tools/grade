@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -27,9 +28,12 @@ func Execute(cfg *driver.Config) error {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 	defer cancel()
-	_, err = collection.InsertOne(ctx, cfg)
+	res, err := collection.InsertMany(ctx, makeDocuments(cfg.Records))
 	if err != nil {
 		return err
+	}
+	for _, objID := range res.InsertedIDs {
+		fmt.Println(objID)
 	}
 	return nil
 }
@@ -57,4 +61,12 @@ func buildClient(cfg *driver.Config) (*mongo.Client, error) {
 		return nil, err
 	}
 	return client, nil
+}
+
+func makeDocuments(records []*driver.Record) []interface{} {
+	var documents []interface{}
+	for _, rec := range records {
+		documents = append(documents, rec)
+	}
+	return documents
 }

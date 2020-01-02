@@ -32,7 +32,7 @@ Complete example is available at https://github.com/sv-go-tools/grade`,
 			if err != nil {
 				return err
 			}
-			cfg.Benchmarks = benchmarks
+			cfg.Records = driver.Records(&cfg, benchmarks)
 		} else {
 			return errors.New("please pipe the output of go test into grade")
 		}

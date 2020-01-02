@@ -2,8 +2,6 @@ package driver
 
 import (
 	"time"
-
-	"github.com/sv-go-tools/grade/internal/parse"
 )
 
 // Config represents the settings to process benchmarks.
@@ -16,15 +14,16 @@ import (
 // Revision is the tag value to use to indicate which revision of the repository was used for the benchmarks that have run. Feel free to use a SHA, tag name, or whatever will be useful to you when querying.
 // HardwareID is a user-specified string to represent the hardware on which the benchmarks have run.
 // Branch is the tag value to use to indicate which branch of the repository was used for the benchmarks that have run. The tag is optional and can be omitted.
+// Records is a list of parsed benchmarks
 type Config struct {
-	ConnectionURL string                        `json:"-" bson:"-"`
-	Insecure      bool                          `json:"-" bson:"-"`
-	Database      string                        `json:"-" bson:"-"`
-	Collection    string                        `json:"-" bson:"-"`
-	GoVersion     string                        `json:"goVersion" bson:"goVersion"`
-	Timestamp     time.Time                     `json:"timestamp" bson:"timestamp"`
-	Revision      string                        `json:"revision" bson:"revision"`
-	HardwareID    string                        `json:"hardwareID" bson:"hardwareID"`
-	Branch        string                        `json:"branch,omitempty" bson:"branch,omitempty"`
-	Benchmarks    map[string][]*parse.Benchmark `json:"benchmarks" bson:"benchmarks"`
+	ConnectionURL string
+	Insecure      bool
+	Database      string
+	Collection    string
+	GoVersion     string
+	Timestamp     time.Time
+	Revision      string
+	HardwareID    string
+	Branch        string
+	Records       []*Record
 }

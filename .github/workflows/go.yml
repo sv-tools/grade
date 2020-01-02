@@ -240,9 +240,10 @@ jobs:
           < log/test.log
           2>&1
           | tee -a logs/mongo.log
+          | grep ObjectID
       - name: Check DB
         run: >-
-          docker exec mongodb mongo -u admin -p secret --authenticationDatabase=admin ${DATABASE} --eval="printjson(db.${COLELCTION}.findOne())"
+          docker exec mongodb mongo -u admin -p secret --authenticationDatabase=admin ${DATABASE} --eval="printjson(db.${COLLECTION}.findOne())"
           2>&1
           | tee -a logs/db.log
           | grep "github.com/sv-go-tools/grade"
