@@ -80,25 +80,20 @@ jobs:
         run: mkdir logs
       - name: Grade JSON
         run: >-
+          echo "Grade JSON" >> logs/json.log &&
           ./bin/grade json
-          --hardwareid="github/actions"
-          --goversion="$(go version | cut -d' ' -f3-)"
-          --revision="${{ github.sha }}"
-          --timestamp=${{ steps.commited-at.outputs.result }}
-          --branch="${{ github.ref }}"
+          --tag "hardwareID=github/actions"
+          --tag "goVersion=$(go version | cut -d' ' -f3-)"
+          --tag "revision=${{ github.sha }}"
+          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "branch=${{ github.ref }}"
           < log/test.log
           2>&1
           | tee -a logs/json.log
-      - name: Grep
-        run: |
-          grep "BenchmarkFib" logs/json.log
-          grep "BenchmarkFibDriver" logs/json.log
-      - name: Upload log
-        if: always()
-        uses: actions/upload-artifact@v1
-        with:
-          name: json
-          path: logs
+          | grep --color Fib
+      - name: Show logs
+        if: failure()
+        run: cat logs/*.log
 
   influx:
     name: Grade InfluxDB
@@ -135,56 +130,51 @@ jobs:
         run: mkdir logs
       - name: Grade dry-run
         run: >-
+          echo "Grade influx dry-run" >> logs/dry-run.log &&
           ./bin/grade influx
-          --connection-url=""
-          --hardwareid="github/actions"
-          --goversion="$(go version | cut -d' ' -f3-)"
-          --revision="${{ github.sha }}"
-          --timestamp=${{ steps.commited-at.outputs.result }}
-          --branch="${{ github.ref }}"
+          --tag "hardwareID=github/actions"
+          --tag "goVersion=$(go version | cut -d' ' -f3-)"
+          --tag "revision=${{ github.sha }}"
+          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "branch=${{ github.ref }}"
           < log/test.log
           2>&1
           | tee -a logs/dry-run.log
-      - name: Grep
-        run: |
-          grep "BenchmarkFib" logs/dry-run.log
-          grep "BenchmarkFibDriver" logs/dry-run.log
+          | grep --color Fib
       - name: Create Database
         run: docker exec influxdb influx -execute "CREATE DATABASE ${DATABASE} WITH DURATION INF SHARD DURATION 90d"
       - name: Grade
         run: >-
+          echo "Grade influx" >> logs/influx.log &&
           ./bin/grade influx
           --connection-url="http://localhost:8086"
           --database="${DATABASE}"
           --measurement="${COLLECTION}"
-          --hardwareid="github/actions"
-          --goversion="$(go version | cut -d' ' -f3-)"
-          --revision="${{ github.sha }}"
-          --timestamp=${{ steps.commited-at.outputs.result }}
-          --branch="${{ github.ref }}"
+          --tag "hardwareID=github/actions"
+          --tag "goVersion=$(go version | cut -d' ' -f3-)"
+          --tag "revision=${{ github.sha }}"
+          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "branch=${{ github.ref }}"
           < log/test.log
           2>&1
           | tee -a logs/influx.log
       - name: Check DB
         run: >-
+          echo "Check DB" >> logs/db.log &&
           docker exec influxdb influx -database ${DATABASE} -execute "SELECT * FROM ${COLLECTION}"
           2>&1
           | tee -a logs/db.log
-      - name: Grep
-        run: |
-          grep "BenchmarkFib" logs/db.log
-          grep "BenchmarkFibDriver" logs/db.log
+          | grep --color Fib
       - name: Docker logs
         if: failure()
         run: |
+          echo "Docker ps" >> logs/ps.log
           docker ps 2>&1 > logs/ps.log
+          echo "Docker logs" >> logs/container.log
           docker logs influxdb 2>&1 > logs/container.log
-      - name: Upload log
-        if: always()
-        uses: actions/upload-artifact@v1
-        with:
-          name: influx
-          path: logs
+      - name: Show logs
+        if: failure()
+        run: cat logs/*.log
 
   mongo:
     name: Grade MongoDB
@@ -224,52 +214,47 @@ jobs:
         run: mkdir logs
       - name: Grade dry-run
         run: >-
+          echo "Grade mongo dry-run" >> logs/dry-run.log &&
           ./bin/grade mongo
-          --connection-url=""
-          --hardwareid="github/actions"
-          --goversion="$(go version | cut -d' ' -f3-)"
-          --revision="${{ github.sha }}"
-          --timestamp=${{ steps.commited-at.outputs.result }}
-          --branch="${{ github.ref }}"
+          --tag "hardwareID=github/actions"
+          --tag "goVersion=$(go version | cut -d' ' -f3-)"
+          --tag "revision=${{ github.sha }}"
+          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "branch=${{ github.ref }}"
           < log/test.log
           2>&1
           | tee -a logs/dry-run.log
-      - name: Grep
-        run: |
-          grep "BenchmarkFib" logs/dry-run.log
-          grep "BenchmarkFibDriver" logs/dry-run.log
+          | grep --color Fib
       - name: Grade
         run: >-
+          echo "Grade mongo" >> logs/mongo.log &&
           ./bin/grade mongo
           --connection-url="mongodb://admin:secret@localhost:27017"
           --database="${DATABASE}"
           --collection="${COLLECTION}"
-          --hardwareid="github/actions"
-          --goversion="$(go version | cut -d' ' -f3-)"
-          --revision="${{ github.sha }}"
-          --timestamp=${{ steps.commited-at.outputs.result }}
-          --branch="${{ github.ref }}"
+          --tag "hardwareID=github/actions"
+          --tag "goVersion=$(go version | cut -d' ' -f3-)"
+          --tag "revision=${{ github.sha }}"
+          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "branch=${{ github.ref }}"
           < log/test.log
           2>&1
           | tee -a logs/mongo.log
-          | grep ObjectID
+          | grep --color ObjectID
       - name: Check DB
         run: >-
+          echo "Check DB" >> logs/db.log &&
           docker exec mongodb mongo -u admin -p secret --authenticationDatabase=admin ${DATABASE} --eval="db.${COLLECTION}.find()"
           2>&1
           | tee -a logs/db.log
-      - name: Grep
-        run: |
-          grep "BenchmarkFib" logs/db.log
-          grep "BenchmarkFibDriver" logs/db.log
+          | grep --color Fib
       - name: Docker logs
         if: failure()
         run: |
+          echo "Docker PS" >> logs/ps.log
           docker ps 2>&1 > logs/ps.log
+          echo "Docker container" >> logs/container.log
           docker logs mongodb 2>&1 > logs/container.log
-      - name: Upload log
-        if: always()
-        uses: actions/upload-artifact@v1
-        with:
-          name: mongo
-          path: logs
+      - name: Show logs
+        if: failure()
+        run: cat logs/*.log

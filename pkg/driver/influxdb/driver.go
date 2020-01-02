@@ -66,20 +66,26 @@ func Points(cfg *driver.Config) (client.BatchPoints, error) {
 	}
 
 	for _, rec := range cfg.Records {
-		tags := map[string]string{
-			"goversion": rec.GoVersion,
-			"hwid":      rec.HardwareID,
-			"name":      rec.Name,
-		}
-		if cfg.Branch != "" {
-			tags["branch"] = rec.Branch
-		}
-		p, err := client.NewPoint(
-			cfg.Collection,
-			tags,
-			makeFields(rec),
-			cfg.Timestamp,
+		fields := makeFields(rec)
+		tags := makeTags(rec, fields)
+		var (
+			err error
+			p   *client.Point
 		)
+		if cfg.Timestamp == nil {
+			p, err = client.NewPoint(
+				cfg.Collection,
+				tags,
+				fields,
+			)
+		} else {
+			p, err = client.NewPoint(
+				cfg.Collection,
+				tags,
+				fields,
+				*cfg.Timestamp,
+			)
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -90,24 +96,37 @@ func Points(cfg *driver.Config) (client.BatchPoints, error) {
 	return bp, nil
 }
 
-func makeFields(rec *driver.Record) map[string]interface{} {
-	f := make(map[string]interface{}, 6)
+func makeFields(rec driver.Record) map[string]interface{} {
+	fields := make(map[string]interface{})
 
-	f["revision"] = rec.Revision
-	f["n"] = rec.N
+	if c, ok := rec["coverage"]; ok {
+		fields["coverage"] = c
+	}
+	fields["n"] = rec["n"]
 
-	if (rec.Measured & parse.NsPerOp) != 0 {
-		f["ns_per_op"] = rec.NsPerOp
+	if (rec["measured"].(int) & parse.NsPerOp) != 0 {
+		fields["nsPerOp"] = rec["nsPerOp"]
 	}
-	if (rec.Measured & parse.MBPerS) != 0 {
-		f["mb_per_s"] = rec.MBPerS
+	if (rec["measured"].(int) & parse.MBPerS) != 0 {
+		fields["mbPerS"] = rec["mbPerS"]
 	}
-	if (rec.Measured & parse.AllocedBytesPerOp) != 0 {
-		f["alloced_bytes_per_op"] = int64(rec.AllocedBytesPerOp)
+	if (rec["measured"].(int) & parse.AllocedBytesPerOp) != 0 {
+		fields["allocedBytesPerOp"] = int64(rec["allocedBytesPerOp"].(uint64))
 	}
-	if (rec.Measured & parse.AllocsPerOp) != 0 {
-		f["allocs_per_op"] = int64(rec.AllocsPerOp)
+	if (rec["measured"].(int) & parse.AllocsPerOp) != 0 {
+		fields["allocsPerOp"] = int64(rec["allocsPerOp"].(uint64))
 	}
+	return fields
+}
 
-	return f
+func makeTags(rec driver.Record, fields map[string]interface{}) map[string]string {
+	tags := make(map[string]string)
+	for k, v := range rec {
+		if _, ok := fields[k]; !ok {
+			if v, ok := v.(string); ok {
+				tags[k] = v
+			}
+		}
+	}
+	return tags
 }

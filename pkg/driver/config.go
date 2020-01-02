@@ -20,10 +20,8 @@ type Config struct {
 	Insecure      bool
 	Database      string
 	Collection    string
-	GoVersion     string
-	Timestamp     time.Time
-	Revision      string
-	HardwareID    string
-	Branch        string
-	Records       []*Record
+	JSONIndent    int
+	Timestamp     *time.Time
+	Tags          Tags
+	Records       Records
 }
