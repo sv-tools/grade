@@ -3,11 +3,10 @@ package influxdb
 import (
 	"fmt"
 	"net/url"
-	"strconv"
 
 	client "github.com/influxdata/influxdb1-client/v2"
+	"golang.org/x/tools/benchmark/parse"
 
-	"github.com/sv-go-tools/grade/internal/parse"
 	"github.com/sv-go-tools/grade/pkg/driver"
 )
 
@@ -70,8 +69,6 @@ func Points(cfg *driver.Config) (client.BatchPoints, error) {
 		tags := map[string]string{
 			"goversion": rec.GoVersion,
 			"hwid":      rec.HardwareID,
-			"pkg":       rec.Package,
-			"procs":     strconv.Itoa(rec.Procs),
 			"name":      rec.Name,
 		}
 		if cfg.Branch != "" {

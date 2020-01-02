@@ -18,4 +18,5 @@ require (
 	golang.org/x/crypto v0.0.0-20191227163750-53104e6ec876 // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e // indirect
 	golang.org/x/text v0.3.2 // indirect
+	golang.org/x/tools v0.0.0-20191230220329-2aa90c603ae3
 )

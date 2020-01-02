@@ -1,18 +1,18 @@
 package driver
 
 import (
+	"io"
 	"time"
 
-	"github.com/sv-go-tools/grade/internal/parse"
+	"golang.org/x/tools/benchmark/parse"
 )
 
 type Record struct {
 	GoVersion         string    `json:"goVersion" bson:"goVersion"`
-	Timestamp         time.Time `json:"timestamp" bson:"timestamp"`
 	Revision          string    `json:"revision" bson:"revision"`
 	HardwareID        string    `json:"hardwareID" bson:"hardwareID"`
 	Branch            string    `json:"branch,omitempty" bson:"branch,omitempty"`
-	Package           string    `json:"package" bson:"package"`
+	Timestamp         time.Time `json:"timestamp" bson:"timestamp"`
 	Name              string    `json:"name" bson:"name"`
 	Procs             int       `json:"procs" bson:"procs"`
 	N                 int       `json:"n" bson:"n"`
@@ -23,9 +23,9 @@ type Record struct {
 	Measured          int       `json:"-" bson:"-"`
 }
 
-func Records(cfg *Config, data map[string][]*parse.Benchmark) []*Record {
+func makeRecords(cfg *Config, data map[string][]*parse.Benchmark) []*Record {
 	var records []*Record
-	for packageName, benchmarks := range data {
+	for _, benchmarks := range data {
 		for _, benchmark := range benchmarks {
 			records = append(records, &Record{
 				GoVersion:         cfg.GoVersion,
@@ -33,9 +33,7 @@ func Records(cfg *Config, data map[string][]*parse.Benchmark) []*Record {
 				Revision:          cfg.Revision,
 				HardwareID:        cfg.HardwareID,
 				Branch:            cfg.Branch,
-				Package:           packageName,
 				Name:              benchmark.Name,
-				Procs:             benchmark.Procs,
 				N:                 benchmark.N,
 				NsPerOp:           benchmark.NsPerOp,
 				AllocedBytesPerOp: benchmark.AllocedBytesPerOp,
@@ -46,4 +44,12 @@ func Records(cfg *Config, data map[string][]*parse.Benchmark) []*Record {
 		}
 	}
 	return records
+}
+
+func Parse(cfg *Config, r io.Reader) ([]*Record, error) {
+	benchmarks, err := parse.ParseSet(r)
+	if err != nil {
+		return nil, err
+	}
+	return makeRecords(cfg, benchmarks), nil
 }

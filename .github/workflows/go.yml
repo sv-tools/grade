@@ -39,7 +39,7 @@ jobs:
       - name: Nancy
         run: nancy go.sum
       - name: Unit Tests
-        run: go test -race -cover -coverprofile=coverage.txt -covermode=atomic -cpu 1,2 -bench . -benchmem > test.log
+        run: go test -race -cover -coverprofile=coverage.txt -covermode=atomic -cpu 1,2 -bench . -benchmem ./... > test.log
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v1
@@ -89,7 +89,10 @@ jobs:
           < log/test.log
           2>&1
           | tee -a logs/json.log
-          | grep "github.com/sv-go-tools/grade"
+      - name: Grep
+        run: |
+          grep "BenchmarkFib" logs/json.log
+          grep "BenchmarkFibDriver" logs/json.log
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v1
@@ -142,7 +145,10 @@ jobs:
           < log/test.log
           2>&1
           | tee -a logs/dry-run.log
-          | grep "github.com/sv-go-tools/grade"
+      - name: Grep
+        run: |
+          grep "BenchmarkFib" logs/dry-run.log
+          grep "BenchmarkFibDriver" logs/dry-run.log
       - name: Create Database
         run: docker exec influxdb influx -execute "CREATE DATABASE ${DATABASE} WITH DURATION INF SHARD DURATION 90d"
       - name: Grade
@@ -164,7 +170,10 @@ jobs:
           docker exec influxdb influx -database ${DATABASE} -execute "SELECT * FROM ${COLLECTION}"
           2>&1
           | tee -a logs/db.log
-          | grep "github.com/sv-go-tools/grade"
+      - name: Grep
+        run: |
+          grep "BenchmarkFib" logs/db.log
+          grep "BenchmarkFibDriver" logs/db.log
       - name: Docker logs
         if: failure()
         run: |
@@ -225,7 +234,10 @@ jobs:
           < log/test.log
           2>&1
           | tee -a logs/dry-run.log
-          | grep "github.com/sv-go-tools/grade"
+      - name: Grep
+        run: |
+          grep "BenchmarkFib" logs/dry-run.log
+          grep "BenchmarkFibDriver" logs/dry-run.log
       - name: Grade
         run: >-
           ./bin/grade mongo
@@ -243,10 +255,13 @@ jobs:
           | grep ObjectID
       - name: Check DB
         run: >-
-          docker exec mongodb mongo -u admin -p secret --authenticationDatabase=admin ${DATABASE} --eval="printjson(db.${COLLECTION}.findOne())"
+          docker exec mongodb mongo -u admin -p secret --authenticationDatabase=admin ${DATABASE} --eval="db.${COLLECTION}.find()"
           2>&1
           | tee -a logs/db.log
-          | grep "github.com/sv-go-tools/grade"
+      - name: Grep
+        run: |
+          grep "BenchmarkFib" logs/db.log
+          grep "BenchmarkFibDriver" logs/db.log
       - name: Docker logs
         if: failure()
         run: |

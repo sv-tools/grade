@@ -8,7 +8,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/sv-go-tools/grade/internal/parse"
 	"github.com/sv-go-tools/grade/pkg/driver"
 )
 
@@ -28,11 +27,11 @@ Complete example is available at https://github.com/sv-go-tools/grade`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		stat, _ := os.Stdin.Stat()
 		if (stat.Mode() & os.ModeCharDevice) == 0 {
-			benchmarks, err := parse.MultipleBenchmarks(os.Stdin)
+			records, err := driver.Parse(&cfg, os.Stdin)
 			if err != nil {
 				return err
 			}
-			cfg.Records = driver.Records(&cfg, benchmarks)
+			cfg.Records = records
 		} else {
 			return errors.New("please pipe the output of go test into grade")
 		}
