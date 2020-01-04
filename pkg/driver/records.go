@@ -34,14 +34,9 @@ func makeRecord(cfg *Config, goOS, goArch, packageName string, benchmark *parse.
 	name = reProcsSuffix.ReplaceAllLiteralString(name, "")
 	rec["name"] = name
 	if match := reProcsSuffix.FindStringSubmatch(benchmark.Name); match == nil {
-		rec["procs"] = 1
+		rec["procs"] = "1"
 	} else {
-		n, err := strconv.Atoi(match[1])
-		if err != nil {
-			rec["procs"] = 1
-		} else {
-			rec["procs"] = n
-		}
+		rec["procs"] = match[1]
 	}
 
 	if cfg.Timestamp != nil {
