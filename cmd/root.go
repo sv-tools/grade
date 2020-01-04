@@ -17,7 +17,6 @@ var (
 	rawTime   string
 	rawTags   []string
 	rawOutput string
-	version   string = "v0.0.0"
 )
 
 // RootCmd is a root command
@@ -75,5 +74,4 @@ Complete example is available at https://github.com/sv-go-tools/grade`,
 		cfg.Output = cmd.OutOrStdout()
 		return nil
 	},
-	Version: version,
 }
