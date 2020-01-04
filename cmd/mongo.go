@@ -7,7 +7,7 @@ import (
 )
 
 var mongoCmd = &cobra.Command{
-	Use:   "mongo",
+	Use:   "mongo [flags] [file ...]",
 	Short: "Store the benchmarks in MongoDB",
 	Long:  `Driver to store the benchmarks in a Mongo Database`,
 	RunE: func(cmd *cobra.Command, args []string) error {

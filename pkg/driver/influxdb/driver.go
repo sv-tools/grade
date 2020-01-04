@@ -19,7 +19,7 @@ func Execute(cfg *driver.Config) error {
 	if cfg.ConnectionURL == "" {
 		// Dry run requested.
 		for _, p := range points.Points() {
-			fmt.Println(p.String())
+			fmt.Fprintln(cfg.Output, p.String())
 		}
 		return nil
 	}

@@ -22,7 +22,7 @@ func Execute(cfg *driver.Config) error {
 		if err != nil {
 			return err
 		}
-		fmt.Println(string(data))
+		fmt.Fprintln(cfg.Output, string(data))
 		return nil
 	}
 
@@ -68,7 +68,7 @@ func Execute(cfg *driver.Config) error {
 		return err
 	}
 	for _, objID := range res.InsertedIDs {
-		fmt.Println(objID)
+		fmt.Fprintln(cfg.Output, objID)
 	}
 	return nil
 }

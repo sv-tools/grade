@@ -10,6 +10,7 @@ import (
 func AddCommonFlags(cmd *cobra.Command, cfg *driver.Config) {
 	cmd.PersistentFlags().StringArrayVarP(&rawTags, "tag", "t", nil, "Custom tag in key=value format")
 	cmd.PersistentFlags().StringVar(&rawTime, "timestamp", "", "Unix epoch timestamp (in seconds) or RFC3339 to apply when storing all benchmark results")
+	cmd.PersistentFlags().StringVarP(&rawOutput, "output", "o", "", "A filename to write an output")
 }
 
 // AddDBFlags adds the DB related flags for a command

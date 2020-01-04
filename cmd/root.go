@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"errors"
+	"io"
 	"os"
 	"strconv"
 	"time"
@@ -12,10 +13,11 @@ import (
 )
 
 var (
-	cfg     driver.Config
-	rawTime string
-	rawTags []string
-	version string = "v0.0.0"
+	cfg       driver.Config
+	rawTime   string
+	rawTags   []string
+	rawOutput string
+	version   string = "v0.0.0"
 )
 
 // RootCmd is a root command
@@ -45,11 +47,32 @@ Complete example is available at https://github.com/sv-go-tools/grade`,
 		}
 		cfg.Tags = tags
 		stat, _ := os.Stdin.Stat()
+		var reader io.Reader
 		if (stat.Mode() & os.ModeCharDevice) == 0 {
-			cfg.Records = driver.ParseRecords(&cfg, os.Stdin)
+			reader = os.Stdin
+		} else if len(args) > 0 {
+			readers := make([]io.Reader, len(args))
+			for i, name := range args {
+				f, err := os.Open(name)
+				if err != nil {
+					return err
+				}
+				defer f.Close()
+				readers[i] = f
+			}
+			reader = io.MultiReader(readers...)
 		} else {
 			return errors.New("please pipe the output of go test into grade")
 		}
+		cfg.Records = driver.ParseRecords(&cfg, reader)
+		if rawOutput != "" {
+			writer, err := os.Create(rawOutput)
+			if err != nil {
+				return err
+			}
+			cmd.SetOut(writer)
+		}
+		cfg.Output = cmd.OutOrStdout()
 		return nil
 	},
 	Version: version,

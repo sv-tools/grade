@@ -10,12 +10,19 @@ import (
 )
 
 func Execute(cfg *driver.Config) error {
-	indent := strings.Repeat(" ", cfg.JSONIndent)
-	data, err := json.MarshalIndent(makeRecords(cfg.Records), "", indent)
+	var (
+		data []byte
+		err  error
+	)
+	if cfg.JSONIndent == 0 {
+		data, err = json.Marshal(makeRecords(cfg.Records))
+	} else {
+		data, err = json.MarshalIndent(makeRecords(cfg.Records), "", strings.Repeat(" ", cfg.JSONIndent))
+	}
 	if err != nil {
 		return err
 	}
-	fmt.Println(string(data))
+	fmt.Fprintln(cfg.Output, string(data))
 	return nil
 }
 

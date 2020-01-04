@@ -1,6 +1,7 @@
 package driver
 
 import (
+	"io"
 	"time"
 )
 
@@ -24,4 +25,5 @@ type Config struct {
 	Timestamp     *time.Time
 	Tags          Tags
 	Records       Records
+	Output        io.Writer
 }

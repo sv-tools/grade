@@ -7,7 +7,7 @@ import (
 )
 
 var jsonCmd = &cobra.Command{
-	Use:   "json",
+	Use:   "json [flags] [file ...]",
 	Short: "Print the benchmarks in Json format",
 	Long:  `Driver to print the benchmarks in the Json format.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
