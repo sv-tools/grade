@@ -3,11 +3,10 @@ package influxdb
 import (
 	"fmt"
 	"net/url"
-	"strconv"
 
 	client "github.com/influxdata/influxdb1-client/v2"
+	"golang.org/x/tools/benchmark/parse"
 
-	"github.com/sv-go-tools/grade/internal/parse"
 	"github.com/sv-go-tools/grade/pkg/driver"
 )
 
@@ -66,53 +65,68 @@ func Points(cfg *driver.Config) (client.BatchPoints, error) {
 		return nil, err
 	}
 
-	for pkg, bs := range cfg.Benchmarks {
-		for _, b := range bs {
-			tags := map[string]string{
-				"goversion": cfg.GoVersion,
-				"hwid":      cfg.HardwareID,
-				"pkg":       pkg,
-				"procs":     strconv.Itoa(b.Procs),
-				"name":      b.Name,
-			}
-			if cfg.Branch != "" {
-				tags["branch"] = cfg.Branch
-			}
-			p, err := client.NewPoint(
+	for _, rec := range cfg.Records {
+		fields := makeFields(rec)
+		tags := makeTags(rec, fields)
+		var (
+			err error
+			p   *client.Point
+		)
+		if cfg.Timestamp == nil {
+			p, err = client.NewPoint(
 				cfg.Collection,
 				tags,
-				makeFields(b, cfg),
-				cfg.Timestamp,
+				fields,
 			)
-			if err != nil {
-				return nil, err
-			}
-
-			bp.AddPoint(p)
+		} else {
+			p, err = client.NewPoint(
+				cfg.Collection,
+				tags,
+				fields,
+				*cfg.Timestamp,
+			)
 		}
+		if err != nil {
+			return nil, err
+		}
+
+		bp.AddPoint(p)
 	}
 
 	return bp, nil
 }
 
-func makeFields(b *parse.Benchmark, cfg *driver.Config) map[string]interface{} {
-	f := make(map[string]interface{}, 6)
+func makeFields(rec driver.Record) map[string]interface{} {
+	fields := make(map[string]interface{})
 
-	f["revision"] = cfg.Revision
-	f["n"] = b.N
+	if c, ok := rec["coverage"]; ok {
+		fields["coverage"] = c
+	}
+	fields["n"] = rec["n"]
 
-	if (b.Measured & parse.NsPerOp) != 0 {
-		f["ns_per_op"] = b.NsPerOp
+	if (rec["measured"].(int) & parse.NsPerOp) != 0 {
+		fields["nsPerOp"] = rec["nsPerOp"]
 	}
-	if (b.Measured & parse.MBPerS) != 0 {
-		f["mb_per_s"] = b.MBPerS
+	if (rec["measured"].(int) & parse.MBPerS) != 0 {
+		fields["mbPerS"] = rec["mbPerS"]
 	}
-	if (b.Measured & parse.AllocedBytesPerOp) != 0 {
-		f["alloced_bytes_per_op"] = int64(b.AllocedBytesPerOp)
+	if (rec["measured"].(int) & parse.AllocedBytesPerOp) != 0 {
+		fields["allocedBytesPerOp"] = int64(rec["allocedBytesPerOp"].(uint64))
 	}
-	if (b.Measured & parse.AllocsPerOp) != 0 {
-		f["allocs_per_op"] = int64(b.AllocsPerOp)
+	if (rec["measured"].(int) & parse.AllocsPerOp) != 0 {
+		fields["allocsPerOp"] = int64(rec["allocsPerOp"].(uint64))
 	}
+	return fields
+}
 
-	return f
+func makeTags(rec driver.Record, fields map[string]interface{}) map[string]string {
+	tags := make(map[string]string)
+	for k, v := range rec {
+		if _, ok := fields[k]; !ok {
+			if v, ok := v.(string); ok {
+				tags[k] = v
+			}
+		}
+	}
+	return tags
 }

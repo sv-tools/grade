@@ -1,0 +1,28 @@
+package driver
+
+import "testing"
+
+func fib(n int) int {
+	if n < 2 {
+		return n
+	}
+	return fib(n-1) + fib(n-2)
+}
+
+var result int
+
+func BenchmarkFibDriver(b *testing.B) {
+	var r int
+	for n := 0; n < b.N; n++ {
+		r = fib(10)
+	}
+	result = r
+}
+
+func BenchmarkFibParallelDriver(b *testing.B) {
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			_ = fib(10)
+		}
+	})
+}
