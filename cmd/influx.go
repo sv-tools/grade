@@ -7,7 +7,7 @@ import (
 )
 
 var influxCmd = &cobra.Command{
-	Use:   "influx",
+	Use:   "influx [flags] [file ...]",
 	Short: "Store the benchmarks in InfluxDB",
 	Long:  `Driver to store the benchmarks in a Influx Database`,
 	RunE: func(cmd *cobra.Command, args []string) error {
