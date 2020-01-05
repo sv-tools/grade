@@ -261,23 +261,3 @@ jobs:
       - name: Show logs
         if: failure()
         run: cat logs/*.log
-
-  docker:
-    name: Docker
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v1
-      - name: Set variables
-        id: vars
-        run: |
-          VERSION="$(git describe --abbrev=0 || echo 'v0.0.0')+${{ github.sha }}"
-          echo "::set-output name=version::${VERSION}"
-      - name: Build
-        run: docker build -t grade --build-arg VERSION="${{ steps.vars.outputs.version }}" .
-      - name: Check version
-        run: |
-          VERSION=$(docker run grade --version)
-          echo ${VERSION}
-          test "grade version '${{ steps.vars.outputs.version }}'" = "${VERSION}"

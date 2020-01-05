@@ -1,7 +1,7 @@
 # grade
 [![Build Status](https://github.com/sv-go-tools/grade/workflows/Go/badge.svg)](https://github.com/sv-go-tools/grade/actions?query=branch%3Amaster+event%3Apush)
-[![License](https://img.shields.io/github/license/sv-go-tools/grade.svg)](/LICENSE)
-[![Release](https://img.shields.io/github/release/sv-go-tools/grade.svg)](https://github.com/sv-go-tools/grade.svg/releases/latest)
+[![License](https://img.shields.io/github/license/sv-go-tools/grade.svg)](/LICENSE.txt)
+[![Release](https://img.shields.io/github/release/sv-go-tools/grade.svg)](https://github.com/sv-go-tools/grade/releases/latest)
 
 
 `grade` transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.
@@ -11,11 +11,27 @@ This is a fork of the [influxdata/grade](https://github.com/influxdata/grade). T
 
 ## Installation
 
-To download and install the `grade` executable into your `$GOPATH/bin`:
-
+### Using `brew`
 ```sh
-go get github.com/sv-go-tools/grade/cmd/grade
+brew install sv-go-tools/apps/grade
 ```
+
+### Docker
+```sh
+docker pull docker.pkg.github.com/sv-go-tools/grade/grade:latest
+```
+
+### Go way
+To install latest master:
+```sh
+go get github.com/sv-go-tools/grade
+```
+
+### Binary mode
+
+Download a build for your OS from the [latest release](https://github.com/sv-go-tools/grade/releases/latest).
+
+The checksums is signed by gpg key [7D76B375F08A7D93584B36D766538F03CDA385C7](https://keys.openpgp.org/search?q=sv.go.tools@gmail.com)
 
 ## Usage
 

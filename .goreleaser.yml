@@ -19,14 +19,18 @@ builds:
 
 archives:
   - format: tar.gz
-    wrap_in_directory: false
+    wrap_in_directory: true
     name_template: "{{ .Binary }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
 
 checksum:
   name_template: "{{ .ProjectName }}-{{ .Tag }}-checksums.txt"
 
+signs:
+  - artifacts: checksum
+
 dockers:
-  - goos: linux
+  - dockerfile: build/Dockerfile
+    goos: linux
     goarch: amd64
     binaries:
       - grade
@@ -34,3 +38,19 @@ dockers:
       - "docker.pkg.github.com/sv-go-tools/{{ .ProjectName }}/{{ .ProjectName }}:latest"
       - "docker.pkg.github.com/sv-go-tools/{{ .ProjectName }}/{{ .ProjectName }}:{{ .Tag }}"
       - "docker.pkg.github.com/sv-go-tools/{{ .ProjectName }}/{{ .ProjectName }}:v{{ .Major }}"
+    build_flag_templates:
+      - "--label=description=grade transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time."
+      - "--label=version={{ .Tag }}"
+      - "--label=homepage=https://github.com/sv-go-tools/grade"
+      - "--label=commit={{ .FullCommit }}"
+      - "--label=date={{ .Date }}"
+
+brews:
+  - github:
+      owner: sv-go-tools
+      name: homebrew-apps
+    folder: Formula
+    homepage: https://github.com/sv-go-tools/grade
+    description: grade transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.
+    install: bin.install "grade"
+    test: assert_equal `#{bin}/grade --version`, "grade version v#{version}"
