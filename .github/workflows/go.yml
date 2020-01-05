@@ -47,7 +47,10 @@ jobs:
           name: log
           path: test.log
       - name: Build
-        run: go build -o grade grade.go
+        run: |
+          VERSION="$(git describe --abbrev=0 || echo 'v0.0.0')+${{ github.sha }}"
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X 'main.version=${VERSION}'" -o grade grade.go
+          ./grade --version
       - name: Upload grade
         uses: actions/upload-artifact@v1
         with:
@@ -258,3 +261,23 @@ jobs:
       - name: Show logs
         if: failure()
         run: cat logs/*.log
+
+  docker:
+    name: Docker
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Set variables
+        id: vars
+        run: |
+          VERSION="$(git describe --abbrev=0 || echo 'v0.0.0')+${{ github.sha }}"
+          echo "::set-output name=version::${VERSION}"
+      - name: Build
+        run: docker build -t grade --build-arg VERSION="${{ steps.vars.outputs.version }}" .
+      - name: Check version
+        run: |
+          VERSION=$(docker run grade --version)
+          echo ${VERSION}
+          test "grade version '${{ steps.vars.outputs.version }}'" = "${VERSION}"
