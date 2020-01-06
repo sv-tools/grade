@@ -2,6 +2,7 @@
 [![Build Status](https://github.com/sv-go-tools/grade/workflows/Go/badge.svg)](https://github.com/sv-go-tools/grade/actions?query=branch%3Amaster+event%3Apush)
 [![License](https://img.shields.io/github/license/sv-go-tools/grade.svg)](/LICENSE.txt)
 [![Release](https://img.shields.io/github/release/sv-go-tools/grade.svg)](https://github.com/sv-go-tools/grade/releases/latest)
+[![Benchmarks](https://img.shields.io/badge/benchmarks-grade-orange)](https://charts.mongodb.com/charts-benchmarks-sowty/public/dashboards/1d549602-7542-4b9a-a528-aa32dcba2e90)
 
 
 `grade` transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.

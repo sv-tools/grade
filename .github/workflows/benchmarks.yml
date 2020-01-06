@@ -1,0 +1,27 @@
+name: Benchmarks
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.13.x
+      - name: Checkout code
+        uses: actions/checkout@v1
+      - name: Unit Tests
+        run: go test -race -cover -coverprofile=coverage.txt -covermode=atomic -cpu 1,2 -bench . -benchmem ./... > test.log
+      - name: Mongo
+        run: >-
+          go run . mongo
+          --connection-url="mongodb://${{ secrets.MONGO_USER }}:${{ secrets.MONGO_PASSWORD }}@bench-shard-00-00-jhj17.mongodb.net:27017,bench-shard-00-01-jhj17.mongodb.net:27017,bench-shard-00-02-jhj17.mongodb.net:27017/test?ssl=true&replicaSet=bench-shard-0&authSource=admin&retryWrites=true&w=majority"
+          --database="sv-go-tools"
+          --collection="grade"
+          --tag "hardwareID=github/actions"
+          --tag "goVersion=$(go version | cut -d' ' -f3-)"
+          --tag "revision=${{ github.sha }}"
+          < test.log
