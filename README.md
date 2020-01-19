@@ -1,6 +1,6 @@
 # grade
-[![Release](https://img.shields.io/github/release/sv-go-tools/grade.svg)](https://github.com/sv-go-tools/grade/releases/latest)
-[![Build Status](https://github.com/sv-go-tools/grade/workflows/Benchmarks/badge.svg)](https://charts.mongodb.com/charts-benchmarks-sowty/public/dashboards/1d549602-7542-4b9a-a528-aa32dcba2e90)
+[![Release](https://img.shields.io/github/release/sv-go-tools/grade.svg)](https://github.com/sv-tools/grade/releases/latest)
+[![Build Status](https://github.com/sv-tools/grade/workflows/Benchmarks/badge.svg)](https://charts.mongodb.com/charts-benchmarks-sowty/public/dashboards/1d549602-7542-4b9a-a528-aa32dcba2e90)
 [![License](https://img.shields.io/github/license/sv-go-tools/grade.svg)](/LICENSE.txt)
 
 `grade` transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.
@@ -17,18 +17,18 @@ brew install sv-go-tools/apps/grade
 
 ### Docker
 ```sh
-docker pull docker.pkg.github.com/sv-go-tools/grade/grade:latest
+docker pull docker.pkg.github.com/sv-tools/grade/grade:latest
 ```
 
 ### Go way
 To install latest master:
 ```sh
-go get github.com/sv-go-tools/grade
+go get github.com/sv-tools/grade
 ```
 
 ### Binary mode
 
-Download a build for your OS from the [latest release](https://github.com/sv-go-tools/grade/releases/latest).
+Download a build for your OS from the [latest release](https://github.com/sv-tools/grade/releases/latest).
 
 The checksums is signed by gpg key [7D76B375F08A7D93584B36D766538F03CDA385C7](https://keys.openpgp.org/search?q=sv.go.tools@gmail.com)
 
@@ -94,7 +94,7 @@ for InfluxDB and MongoGo will be used a server's time.
     "n": 578371,
     "name": "Fib",
     "nsPerOp": 2155,
-    "package": "github.com/sv-go-tools/grade",
+    "package": "github.com/sv-tools/grade",
     "procs": 16,
     "revision": "e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec",
     "timestamp": "2020-01-02T14:24:18-06:00"
@@ -112,7 +112,7 @@ for InfluxDB and MongoGo will be used a server's time.
     "n": 4771570,
     "name": "FibParallel",
     "nsPerOp": 261,
-    "package": "github.com/sv-go-tools/grade",
+    "package": "github.com/sv-tools/grade",
     "procs": 16,
     "revision": "e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec",
     "timestamp": "2020-01-02T14:24:18-06:00"
@@ -130,7 +130,7 @@ for InfluxDB and MongoGo will be used a server's time.
     "n": 587794,
     "name": "FibDriver",
     "nsPerOp": 2096,
-    "package": "github.com/sv-go-tools/grade/pkg/driver",
+    "package": "github.com/sv-tools/grade/pkg/driver",
     "procs": 16,
     "revision": "e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec",
     "timestamp": "2020-01-02T14:24:18-06:00"
@@ -148,7 +148,7 @@ for InfluxDB and MongoGo will be used a server's time.
     "n": 4550692,
     "name": "FibParallelDriver",
     "nsPerOp": 271,
-    "package": "github.com/sv-go-tools/grade/pkg/driver",
+    "package": "github.com/sv-tools/grade/pkg/driver",
     "procs": 16,
     "revision": "e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec",
     "timestamp": "2020-01-02T14:24:18-06:00"
@@ -191,17 +191,17 @@ If you set it to an empty string `""`, `grade` will print line protocol to stdou
 #### Output
 
 ```ini
-go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=Fib,package=github.com/sv-go-tools/grade,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=578371i,nsPerOp=2155 1577996658000000000
-go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=FibParallel,package=github.com/sv-go-tools/grade,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=4771570i,nsPerOp=261 1577996658000000000
-go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=FibDriver,package=github.com/sv-go-tools/grade/pkg/driver,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=587794i,nsPerOp=2096 1577996658000000000
-go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=FibParallelDriver,package=github.com/sv-go-tools/grade/pkg/driver,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=4550692i,nsPerOp=271 1577996658000000000
+go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=Fib,package=github.com/sv-tools/grade,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=578371i,nsPerOp=2155 1577996658000000000
+go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=FibParallel,package=github.com/sv-tools/grade,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=4771570i,nsPerOp=261 1577996658000000000
+go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=FibDriver,package=github.com/sv-tools/grade/pkg/driver,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=587794i,nsPerOp=2096 1577996658000000000
+go,branch=mongodb,goArch=amd64,goOS=darwin,goVersion=go1.13.5\ darwin/amd64,hardwareID=my\ dev\ machine,name=FibParallelDriver,package=github.com/sv-tools/grade/pkg/driver,procs=16,revision=e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec allocedBytesPerOp=0i,allocsPerOp=0i,coverage=0,n=4550692i,nsPerOp=271 1577996658000000000
 ```
 
 For each benchmark result from a run of `go test -bench`:
 
 * Tags:
   * All the tags passed to `grade` as `--tag`.
-  * `package` is the name of Go package containing the benchmark, e.g. `github.com/sv-go-tools/grade`.
+  * `package` is the name of Go package containing the benchmark, e.g. `github.com/sv-tools/grade`.
   * `name` is the name of the benchmark function, stripped of the `Benchmark` prefix, e.g. `Fib`.
   * `goArch` is the architecture of a your machine, e.g. `amd64`.
   * `goOS` is your operating system, e.g. `darwin`.
@@ -235,7 +235,7 @@ The differnce is that this requires `--collection` tag instead of `--measurement
 #### Output
 
 ```json
-[{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":578371,"name":"Fib","nsPerOp":2155,"package":"github.com/sv-go-tools/grade","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":4771570,"name":"FibParallel","nsPerOp":261,"package":"github.com/sv-go-tools/grade","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":587794,"name":"FibDriver","nsPerOp":2096,"package":"github.com/sv-go-tools/grade/pkg/driver","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":4550692,"name":"FibParallelDriver","nsPerOp":271,"package":"github.com/sv-go-tools/grade/pkg/driver","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"}]
+[{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":578371,"name":"Fib","nsPerOp":2155,"package":"github.com/sv-tools/grade","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":4771570,"name":"FibParallel","nsPerOp":261,"package":"github.com/sv-tools/grade","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":587794,"name":"FibDriver","nsPerOp":2096,"package":"github.com/sv-tools/grade/pkg/driver","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":4550692,"name":"FibParallelDriver","nsPerOp":271,"package":"github.com/sv-tools/grade/pkg/driver","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"}]
 ```
 
 Or with a non empty `--connection-url`:

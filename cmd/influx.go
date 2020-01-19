@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/sv-go-tools/grade/pkg/driver/influxdb"
+	"github.com/sv-tools/grade/pkg/driver/influxdb"
 )
 
 var influxCmd = &cobra.Command{

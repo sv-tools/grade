@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/sv-go-tools/grade/cmd"
+	"github.com/sv-tools/grade/cmd"
 )
 
 var version string = "v0.0.0"

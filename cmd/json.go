@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/sv-go-tools/grade/pkg/driver/json"
+	"github.com/sv-tools/grade/pkg/driver/json"
 
 	"github.com/spf13/cobra"
 )

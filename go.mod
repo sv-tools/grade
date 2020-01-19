@@ -1,4 +1,4 @@
-module github.com/sv-go-tools/grade
+module github.com/sv-tools/grade
 
 go 1.13
 
