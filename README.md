@@ -1,7 +1,8 @@
 # grade
 
-[![Test](https://img.shields.io/github/workflow/status/sv-tools/grade/Benchmarks)](https://github.com/sv-tools/grade/actions?query=workflow%3A%22Benchmarks%22)
+[![Test](https://img.shields.io/github/workflow/status/sv-tools/grade/Test%20Master%20Branch)](https://github.com/sv-tools/grade/actions?query=workflow%3A%22Test+Master+Branch%22)
 [![Version](https://img.shields.io/github/release/sv-tools/grade.svg)](https://github.com/sv-tools/grade/releases/latest)
+[![Codecov](https://img.shields.io/codecov/c/github/sv-tools/grade)](https://codecov.io/gh/sv-tools/grade)
 
 `grade` transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.
 

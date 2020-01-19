@@ -1,9 +1,7 @@
 name: Go
 
 on:
-  pull_request:
-    branches:
-      - master
+  - pull_request
 
 jobs:
   tests:
@@ -40,6 +38,10 @@ jobs:
         run: nancy go.sum
       - name: Unit Tests
         run: go test -race -cover -coverprofile=coverage.txt -covermode=atomic -cpu 1,2 -bench . -benchmem ./... > test.log
+      - name: Codecov
+        run: bash <(curl -s https://codecov.io/bash)
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Upload log
         if: always()
         uses: actions/upload-artifact@v1
