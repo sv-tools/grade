@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sv-go-tools/grade/pkg/driver"
+	"github.com/sv-tools/grade/pkg/driver"
 )
 
 func Execute(cfg *driver.Config) error {

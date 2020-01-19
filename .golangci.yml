@@ -1,5 +1,5 @@
 service:
-  project-path: github.com/sv-go-tools/grade
+  project-path: github.com/sv-tools/grade
 
 run:
   skip-dirs:
@@ -27,7 +27,7 @@ linters-settings:
   govet:
     check-shadowing: false
   goimports:
-    local-prefixes: github.com/sv-go-tools/grade
+    local-prefixes: github.com/sv-tools/grade
   gocognit:
     min-complexity: 15
   gocyclo:

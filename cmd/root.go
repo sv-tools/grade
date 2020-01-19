@@ -9,7 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/sv-go-tools/grade/pkg/driver"
+	"github.com/sv-tools/grade/pkg/driver"
 )
 
 var (
@@ -25,7 +25,7 @@ var RootCmd = &cobra.Command{
 	Short: "Grade uploads Go benchmark data into a database.",
 	Long: `Grade ingests Go benchmark data into a database so that you can track performance over time.
 Just pipe the output of go test into grade.
-Complete example is available at https://github.com/sv-go-tools/grade`,
+Complete example is available at https://github.com/sv-tools/grade`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		if rawTime != "" {
 			seconds, err := strconv.Atoi(rawTime)

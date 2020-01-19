@@ -3,7 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/sv-go-tools/grade/pkg/driver/mongodb"
+	"github.com/sv-tools/grade/pkg/driver/mongodb"
 )
 
 var mongoCmd = &cobra.Command{

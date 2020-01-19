@@ -7,7 +7,7 @@ import (
 	client "github.com/influxdata/influxdb1-client/v2"
 	"golang.org/x/tools/benchmark/parse"
 
-	"github.com/sv-go-tools/grade/pkg/driver"
+	"github.com/sv-tools/grade/pkg/driver"
 )
 
 func Execute(cfg *driver.Config) error {

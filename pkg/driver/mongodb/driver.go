@@ -13,7 +13,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"go.mongodb.org/mongo-driver/x/mongo/driver/connstring"
 
-	"github.com/sv-go-tools/grade/pkg/driver"
+	"github.com/sv-tools/grade/pkg/driver"
 )
 
 func Execute(cfg *driver.Config) error {
