@@ -2,7 +2,7 @@ project_name: grade
 
 release:
   github:
-    owner: sv-go-tools
+    owner: sv-tools
     name: grade
 
 builds:
@@ -35,9 +35,9 @@ dockers:
     binaries:
       - grade
     image_templates:
-      - "docker.pkg.github.com/sv-go-tools/{{ .ProjectName }}/{{ .ProjectName }}:latest"
-      - "docker.pkg.github.com/sv-go-tools/{{ .ProjectName }}/{{ .ProjectName }}:{{ .Tag }}"
-      - "docker.pkg.github.com/sv-go-tools/{{ .ProjectName }}/{{ .ProjectName }}:v{{ .Major }}"
+      - "docker.pkg.github.com/sv-tools/{{ .ProjectName }}/{{ .ProjectName }}:latest"
+      - "docker.pkg.github.com/sv-tools/{{ .ProjectName }}/{{ .ProjectName }}:{{ .Tag }}"
+      - "docker.pkg.github.com/sv-tools/{{ .ProjectName }}/{{ .ProjectName }}:v{{ .Major }}"
     build_flag_templates:
       - "--label=description=grade transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time."
       - "--label=version={{ .Tag }}"
@@ -47,7 +47,7 @@ dockers:
 
 brews:
   - github:
-      owner: sv-go-tools
+      owner: sv-tools
       name: homebrew-apps
     folder: Formula
     homepage: https://github.com/sv-tools/grade
