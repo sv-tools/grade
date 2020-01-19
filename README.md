@@ -1,7 +1,7 @@
 # grade
-[![Release](https://img.shields.io/github/release/sv-go-tools/grade.svg)](https://github.com/sv-tools/grade/releases/latest)
-[![Build Status](https://github.com/sv-tools/grade/workflows/Benchmarks/badge.svg)](https://charts.mongodb.com/charts-benchmarks-sowty/public/dashboards/1d549602-7542-4b9a-a528-aa32dcba2e90)
-[![License](https://img.shields.io/github/license/sv-go-tools/grade.svg)](/LICENSE.txt)
+
+[![Test](https://img.shields.io/github/workflow/status/sv-tools/grade/Benchmarks)](https://github.com/SVilgelm/marshmallow-objects/actions?query=workflow%3A%22Test+Master+Branch%22)
+[![Version](https://img.shields.io/github/release/sv-tools/grade.svg)](https://github.com/sv-tools/grade/releases/latest)
 
 `grade` transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.
 
@@ -12,7 +12,7 @@ This is a fork of the [influxdata/grade](https://github.com/influxdata/grade). T
 
 ### Using `brew`
 ```sh
-brew install sv-go-tools/apps/grade
+brew install sv-tools/apps/grade
 ```
 
 ### Docker
