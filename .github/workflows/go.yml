@@ -8,8 +8,8 @@ jobs:
     name: Style and Unit Tests
     runs-on: ubuntu-latest
     env:
-      LINT_VERSION: "v1.22.2"
-      NANCY_VERSION: "v0.0.39"
+      LINT_VERSION: "v1.23.0"
+      NANCY_VERSION: "v0.0.40"
     steps:
       - name: Install Go
         uses: actions/setup-go@v1
