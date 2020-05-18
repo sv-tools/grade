@@ -54,6 +54,18 @@ brews:
       name: homebrew-apps
     folder: Formula
     homepage: https://github.com/sv-tools/grade
-    description: grade transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.
+    description: |
+      grade transforms Go benchmark data into various formats
+      then it can upload the data to a database to track the performance over time.
     install: bin.install "grade"
     test: assert_equal `#{bin}/grade --version`, "grade version v#{version}"
+
+snapcrafts:
+  - name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
+    summary: grade transforms Go benchmark data into various formats
+    description: |
+      grade transforms Go benchmark data into various formats
+      then it can upload the data to a database to track the performance over time.
+    grade: stable
+    confinement: classic
+    publish: true
