@@ -35,7 +35,7 @@ jobs:
           yml: ./.codecov.yml
       - name: Upload log
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@2.1.0
         with:
           name: log
           path: test.log
@@ -45,7 +45,7 @@ jobs:
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -X 'main.version=${VERSION}'" -o grade grade.go
           ./grade --version
       - name: Upload grade
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@2.1.0
         with:
           name: bin
           path: grade
