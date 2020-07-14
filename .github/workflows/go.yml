@@ -55,13 +55,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download grade
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: bin
       - name: Make executable
         run: chmod +x bin/grade
       - name: Download log
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: log
       - uses: actions/github-script@v2
@@ -105,13 +105,13 @@ jobs:
       COLLECTION: Grade
     steps:
       - name: Download grade
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: bin
       - name: Make executable
         run: chmod +x bin/grade
       - name: Download log
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: log
       - uses: actions/github-script@v2
@@ -189,13 +189,13 @@ jobs:
       COLLECTION: Grade
     steps:
       - name: Download grade
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: bin
       - name: Make executable
         run: chmod +x bin/grade
       - name: Download log
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: log
       - uses: actions/github-script@v2
