@@ -55,13 +55,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download grade
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: bin
       - name: Make executable
-        run: chmod +x bin/grade
+        run: chmod +x grade
       - name: Download log
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: log
       - uses: actions/github-script@v2
@@ -76,13 +76,13 @@ jobs:
       - name: Grade JSON
         run: >-
           echo "Grade JSON" >> logs/json.log &&
-          ./bin/grade json
+          ./grade json
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
           --tag "timestamp=${{ steps.commited-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
-          < log/test.log
+          < test.log
           2>&1
           | tee -a logs/json.log
           | grep --color Fib
@@ -105,13 +105,13 @@ jobs:
       COLLECTION: Grade
     steps:
       - name: Download grade
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: bin
       - name: Make executable
-        run: chmod +x bin/grade
+        run: chmod +x grade
       - name: Download log
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: log
       - uses: actions/github-script@v2
@@ -126,13 +126,13 @@ jobs:
       - name: Grade dry-run
         run: >-
           echo "Grade influx dry-run" >> logs/dry-run.log &&
-          ./bin/grade influx
+          ./grade influx
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
           --tag "timestamp=${{ steps.commited-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
-          < log/test.log
+          < test.log
           2>&1
           | tee -a logs/dry-run.log
           | grep --color Fib
@@ -141,7 +141,7 @@ jobs:
       - name: Grade
         run: >-
           echo "Grade influx" >> logs/influx.log &&
-          ./bin/grade influx
+          ./grade influx
           --connection-url="http://localhost:8086"
           --database="${DATABASE}"
           --measurement="${COLLECTION}"
@@ -150,7 +150,7 @@ jobs:
           --tag "revision=${{ github.sha }}"
           --tag "timestamp=${{ steps.commited-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
-          < log/test.log
+          < test.log
           2>&1
           | tee -a logs/influx.log
       - name: Check DB
@@ -189,13 +189,13 @@ jobs:
       COLLECTION: Grade
     steps:
       - name: Download grade
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: bin
       - name: Make executable
-        run: chmod +x bin/grade
+        run: chmod +x grade
       - name: Download log
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v2
         with:
           name: log
       - uses: actions/github-script@v2
@@ -210,20 +210,20 @@ jobs:
       - name: Grade dry-run
         run: >-
           echo "Grade mongo dry-run" >> logs/dry-run.log &&
-          ./bin/grade mongo
+          ./grade mongo
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
           --tag "timestamp=${{ steps.commited-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
-          < log/test.log
+          < test.log
           2>&1
           | tee -a logs/dry-run.log
           | grep --color Fib
       - name: Grade
         run: >-
           echo "Grade mongo" >> logs/mongo.log &&
-          ./bin/grade mongo
+          ./grade mongo
           --connection-url="mongodb://admin:secret@localhost:27017"
           --database="${DATABASE}"
           --collection="${COLLECTION}"
@@ -232,7 +232,7 @@ jobs:
           --tag "revision=${{ github.sha }}"
           --tag "timestamp=${{ steps.commited-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
-          < log/test.log
+          < test.log
           2>&1
           | tee -a logs/mongo.log
           | grep --color ObjectID
