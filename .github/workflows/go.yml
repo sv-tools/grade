@@ -29,7 +29,7 @@ jobs:
       - name: Unit Tests
         run: go test -race -cover -coverprofile=coverage.out -covermode=atomic -cpu 1,2 -bench . -benchmem ./... > test.log
       - name: Codecov
-        uses: codecov/codecov-action@v1.0.13
+        uses: codecov/codecov-action@v1.2.2
         with:
           file: ./coverage.out
       - name: Upload log
