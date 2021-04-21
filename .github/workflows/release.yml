@@ -5,8 +5,9 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
   milestone:
     types: [closed]
+
 env:
-  GO: 1.14.x
+  GO: 1.16
 
 jobs:
   bump-version:
