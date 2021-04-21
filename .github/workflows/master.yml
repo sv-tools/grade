@@ -14,7 +14,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.16
+          go-version: ${{ env.GO }}
 
       - name: unittests
         run: go test -race -cover -coverprofile=coverage.out -covermode=atomic -cpu 1,2 -bench . -benchmem ./... > test.log
@@ -23,7 +23,7 @@ jobs:
         run: cat test.log
 
       - name: Codecov
-        uses: codecov/codecov-action@v1.4.0
+        uses: codecov/codecov-action@v1.4.1
         with:
           file: ./coverage.out
 
