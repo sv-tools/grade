@@ -138,7 +138,7 @@ brews:
 
 snapcrafts:
   - name_template: "{{ .ProjectName }}-{{ .Tag }}-{{ .Os }}-{{ .Arch }}"
-    summary: "grade transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time."
+    summary: "grade transforms Go benchmark data into various formats."
     description: "grade transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time."
     grade: stable
     confinement: strict
