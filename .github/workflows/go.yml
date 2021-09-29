@@ -82,7 +82,7 @@ jobs:
 
       - name: Upload log
         if: always()
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v2.2.4
         with:
           name: log
           path: test.log
@@ -94,7 +94,7 @@ jobs:
           ./grade --version
 
       - name: Upload grade
-        uses: actions/upload-artifact@v2.2.3
+        uses: actions/upload-artifact@v2.2.4
         with:
           name: bin
           path: grade
