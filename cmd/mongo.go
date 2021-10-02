@@ -16,7 +16,7 @@ var mongoCmd = &cobra.Command{
 }
 
 func init() {
-	AddCommonFlags(mongoCmd, &cfg)
+	AddCommonFlags(mongoCmd)
 	AddDBFlags(mongoCmd, &cfg, "collection")
 
 	RootCmd.AddCommand(mongoCmd)

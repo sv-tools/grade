@@ -16,7 +16,7 @@ var jsonCmd = &cobra.Command{
 }
 
 func init() {
-	AddCommonFlags(jsonCmd, &cfg)
+	AddCommonFlags(jsonCmd)
 	jsonCmd.PersistentFlags().IntVar(&cfg.JSONIndent, "indent", 2, "Json indent")
 
 	RootCmd.AddCommand(jsonCmd)

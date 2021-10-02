@@ -8,7 +8,7 @@ on:
       - "v[0-9]+.[0-9]+.[0-9]+"
 
 env:
-  GO: 1.16
+  GO: 1.17
 
 jobs:
   bump-version:
@@ -39,7 +39,14 @@ jobs:
       - name: Push Tag
         run: git push origin --tags
 
-  release:
+      - name: Create Milestone
+        uses: WyriHaximus/github-action-create-milestone@v1.1
+        with:
+          title: Next
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+  release-cli:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     env:
@@ -76,18 +83,11 @@ jobs:
           username: svtools
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Snapcraft Login
-        env:
-          SNAPCRAFT_LOGIN: ${{ secrets.SNAPCRAFT_LOGIN }}
-        run: |
-          sudo apt-get -yq --no-install-suggests --no-install-recommends install snapcraft
-          snapcraft login --with <(echo "$SNAPCRAFT_LOGIN")
-
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v2
         with:
           version: latest
-          args: release --rm-dist
+          args: release --rm-dist --config .github/goreleaser-cli.yml
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
 
