@@ -101,12 +101,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: log
-      - uses: actions/github-script@v4.0.2
+      - uses: actions/github-script@v5
         id: committed-at
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const commit_details = await github.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
+            const commit_details = await github.rest.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
             return commit_details.data.author.date
       - name: Make logs dir
         run: mkdir logs
@@ -151,12 +151,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: log
-      - uses: actions/github-script@v4.0.2
+      - uses: actions/github-script@v5
         id: commited-at
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const commit_details = await github.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
+            const commit_details = await github.rest.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
             return commit_details.data.author.date
       - name: Make logs dir
         run: mkdir logs
@@ -235,12 +235,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: log
-      - uses: actions/github-script@v4.0.2
+      - uses: actions/github-script@v5
         id: commited-at
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const commit_details = await github.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
+            const commit_details = await github.rest.git.getCommit({owner: context.repo.owner, repo: context.repo.repo, commit_sha: context.sha});
             return commit_details.data.author.date
       - name: Make logs dir
         run: mkdir logs
