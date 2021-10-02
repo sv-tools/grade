@@ -1,0 +1,10 @@
+tap "golangci/tap"
+tap "kyoh86/tap"
+tap "goreleaser/tap"
+
+# Fast linters runner for Go.
+brew "golangci/tap/golangci-lint"
+# Rich-Go will enrich `go test` outputs with text decorations
+brew "kyoh86/tap/richgo"
+# Deliver Go binaries as fast and easily as possible
+brew "goreleaser/tap/goreleaser"

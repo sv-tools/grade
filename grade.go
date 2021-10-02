@@ -6,7 +6,7 @@ import (
 	"github.com/sv-tools/grade/cmd"
 )
 
-var version string = "v0.0.0"
+var version = "v0.0.0"
 
 func main() {
 	cmd.RootCmd.Version = version

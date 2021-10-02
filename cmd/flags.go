@@ -7,7 +7,7 @@ import (
 )
 
 // AddCommonFlags adds the common flags for a command
-func AddCommonFlags(cmd *cobra.Command, cfg *driver.Config) {
+func AddCommonFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringArrayVarP(&rawTags, "tag", "t", nil, "Custom tag in key=value format")
 	cmd.PersistentFlags().StringVar(&rawTime, "timestamp", "", "Unix epoch timestamp (in seconds) or RFC3339 to apply when storing all benchmark results")
 	cmd.PersistentFlags().StringVarP(&rawOutput, "output", "o", "", "A filename to write an output")

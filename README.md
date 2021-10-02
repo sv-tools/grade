@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/github/release/sv-tools/grade.svg)](https://github.com/sv-tools/grade/releases/latest)
 [![Codecov](https://img.shields.io/codecov/c/github/sv-tools/grade)](https://codecov.io/gh/sv-tools/grade)
 
-`grade` transforms Go benchmark data into various format so that you can uploads the data to a database and track the performance over time.
+`grade` transforms Go benchmark data into various format so that you can upload the data to a database and track the performance over time.
 
 This is a fork of the [influxdata/grade](https://github.com/influxdata/grade). The main reason for the forking the project is the support of various drivers, such as `Json` and `MongoDB`.
 
@@ -22,7 +22,7 @@ docker pull docker.pkg.github.com/sv-tools/grade/grade:latest
 ```
 
 ### Go way
-To install latest master:
+To install the latest master:
 ```sh
 go get github.com/sv-tools/grade
 ```
@@ -31,7 +31,7 @@ go get github.com/sv-tools/grade
 
 Download a build for your OS from the [latest release](https://github.com/sv-tools/grade/releases/latest).
 
-The checksums is signed by gpg key [7D76B375F08A7D93584B36D766538F03CDA385C7](https://keys.openpgp.org/search?q=sv.go.tools@gmail.com)
+The checksum is signed by gpg key [7D76B375F08A7D93584B36D766538F03CDA385C7](https://keys.openpgp.org/search?q=sv.go.tools@gmail.com)
 
 ## Usage
 
@@ -204,7 +204,7 @@ For each benchmark result from a run of `go test -bench`:
   * All the tags passed to `grade` as `--tag`.
   * `package` is the name of Go package containing the benchmark, e.g. `github.com/sv-tools/grade`.
   * `name` is the name of the benchmark function, stripped of the `Benchmark` prefix, e.g. `Fib`.
-  * `goArch` is the architecture of a your machine, e.g. `amd64`.
+  * `goArch` is the architecture of your machine, e.g. `amd64`.
   * `goOS` is your operating system, e.g. `darwin`.
   * `procs` is the number of CPUs used to run the benchmark. This is a tag because you are more likely to group by `procs` rather than chart them over time.
 
@@ -239,7 +239,7 @@ The differnce is that this requires `--collection` tag instead of `--measurement
 [{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":578371,"name":"Fib","nsPerOp":2155,"package":"github.com/sv-tools/grade","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":4771570,"name":"FibParallel","nsPerOp":261,"package":"github.com/sv-tools/grade","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":587794,"name":"FibDriver","nsPerOp":2096,"package":"github.com/sv-tools/grade/pkg/driver","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"},{"allocedBytesPerOp":0,"allocsPerOp":0,"branch":"mongodb","coverage":0,"goArch":"amd64","goOS":"darwin","goVersion":"go1.13.5 darwin/amd64","hardwareID":"my dev machine","mbPerS":0,"n":4550692,"name":"FibParallelDriver","nsPerOp":271,"package":"github.com/sv-tools/grade/pkg/driver","procs":"16","revision":"e9fb4afc7bf1afcf6b98af1ccc3077f5c50ab8ec","timestamp":"2020-01-02T14:24:18-06:00"}]
 ```
 
-Or with a non empty `--connection-url`:
+Or with a non-empty `--connection-url`:
 
 ```sh
 ./grade mongo --connection-url="mongodb://admin:secret@localhost:27017" bench.log

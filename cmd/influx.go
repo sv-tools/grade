@@ -16,7 +16,7 @@ var influxCmd = &cobra.Command{
 }
 
 func init() {
-	AddCommonFlags(influxCmd, &cfg)
+	AddCommonFlags(influxCmd)
 	AddDBFlags(influxCmd, &cfg, "measurement")
 	influxCmd.PersistentFlags().BoolVarP(&cfg.Insecure, "insecure", "i", false, "Skip SSL verification if set")
 

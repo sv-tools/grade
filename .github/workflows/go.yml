@@ -1,29 +1,33 @@
 name: "Code Analysis"
 
 on:
+  push:
+    tags:
+      - v*
+    branches:
+      - main
   pull_request:
+  schedule:
+    - cron: "0 0 * * 0"
 
 env:
-  GO: 1.16
+  GO: 1.17
 
 jobs:
-  Nancy:
+  CodeQL:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install Go
-        uses: actions/setup-go@v2
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
         with:
-          go-version: ${{ env.GO }}
+          languages: go
 
-      - name: Prepare go list
-        run: go list -json -m all > go.list
-
-      - name: Run Nancy
-        uses: sonatype-nexus-community/nancy-github-action@v1.0.2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
 
   GolangCI-Lint:
     runs-on: ubuntu-latest
@@ -43,23 +47,6 @@ jobs:
           version: latest
           skip-build-cache: true
           skip-go-installation: true
-
-  CodeQL:
-    # CodeQL runs on ubuntu-latest, windows-latest, and macos-latest
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      # Initializes the CodeQL tools for scanning.
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
-        with:
-          languages: go
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
 
   UnitTests:
     runs-on: ubuntu-latest
@@ -115,7 +102,7 @@ jobs:
         with:
           name: log
       - uses: actions/github-script@v4.0.2
-        id: commited-at
+        id: committed-at
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -130,7 +117,7 @@ jobs:
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
-          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "timestamp=${{ steps.committed-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
           < test.log
           2>&1
@@ -180,7 +167,7 @@ jobs:
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
-          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "timestamp=${{ steps.committed-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
           < test.log
           2>&1
@@ -198,7 +185,7 @@ jobs:
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
-          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "timestamp=${{ steps.committed-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
           < test.log
           2>&1
@@ -264,7 +251,7 @@ jobs:
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
-          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "timestamp=${{ steps.committed-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
           < test.log
           2>&1
@@ -280,7 +267,7 @@ jobs:
           --tag "hardwareID=github/actions"
           --tag "goVersion=$(go version | cut -d' ' -f3-)"
           --tag "revision=${{ github.sha }}"
-          --tag "timestamp=${{ steps.commited-at.outputs.result }}"
+          --tag "timestamp=${{ steps.committed-at.outputs.result }}"
           --tag "branch=${{ github.ref }}"
           < test.log
           2>&1
