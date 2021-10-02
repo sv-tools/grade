@@ -101,7 +101,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: log
-      - uses: actions/github-script@v4.0.2
+      - uses: actions/github-script@v5
         id: committed-at
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -151,7 +151,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: log
-      - uses: actions/github-script@v4.0.2
+      - uses: actions/github-script@v5
         id: commited-at
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -235,7 +235,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: log
-      - uses: actions/github-script@v4.0.2
+      - uses: actions/github-script@v5
         id: commited-at
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
