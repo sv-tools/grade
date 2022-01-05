@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/influxdata/influxdb1-client v0.0.0-20200827194710-b269163b24ab
 	github.com/spf13/cobra v1.2.1
-	go.mongodb.org/mongo-driver v1.8.0
+	go.mongodb.org/mongo-driver v1.8.2
 	golang.org/x/tools v0.1.7
 )
 
